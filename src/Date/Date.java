@@ -1,9 +1,9 @@
 package Date;
 
 public class Date {
-    public  static final String[] DAYS = ["Lundi", "Mardi", "Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
-    public static final  String[] MONTHES = ["Janvier","Février" ,"Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-    public static final int[] LONGMONTHS = [31,28,31,30,31,30,31,31,30,31,30,31];
+    public  static final String[] DAYS = {"Lundi", "Mardi", "Mercredi","Jeudi","Vendredi","Samedi","Dimanche"};
+    public static final  String[] MONTHES = {"Janvier","Février" ,"Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"};
+    public static final int[] LONGMONTHS = {31,28,31,30,31,30,31,31,30,31,30,31};
 
     private int[] longMonth;
     private int day;
@@ -26,10 +26,16 @@ public class Date {
     public int[] getLongMonth() {
         return longMonth;
     }
-    public void setLongMonth() {
-        this.longMonth = this.getLONGMONTHS();
-        if(this.isBissextile()){
-            this.longMonth[1] = 29;
+    public Date(int day, int jour, int month, int year) {
+        if (day < 0 || day > 6 || month < 0 || month > 11 || jour < 0 || jour > getLONGMONTHS()[month] - 4) {
+            new Date(0, 0, 0, 0);
+        } else {
+            this.day = day;
+            this.jour = jour;
+            this.month = month;
+            this.year = year;
+            this.setBissextile();
+            this.setLongMonth();
         }
     }
 
@@ -57,34 +63,37 @@ public class Date {
     public int getYear() {
         return year;
     }
-    public void setYear(int year) {
-        this.year = year;
+
+    public void setLongMonth() {
+        this.longMonth = getLONGMONTHS();
+        if(this.isBissextile()){
+            this.longMonth[1] = 29;
+        }
     }
 
     public boolean isBissextile() {
         return bissextile;
     }
-    public void setBissextile() {
-        Boolean bissextile;
-        bissextile = (this.getYear() % 4 == 0 && (this.getYear() % 400 == 0 || this.getYear() % 100 != 0);
-        this.bissextile = bissextile;
+
+    public void setYear(int year) {
+        this.year = year;
+        this.setBissextile();
+        /** cas 29 02 **/
     }
 
-    public Date(int day, int jour, int month, int year) {
-        if (day < 0 || day > 6 || month < 0 || month > 11 || jour < 0 || jour > this.getLONGMONTHS()[month] - 4) {
-            return new Date(0, 0, 0, 0);
-        } else {
-            this.day = day;
-            this.jour = jour;
-            this.month = month;
-            this.year = year;
-            this.setBissextile();
-            this.setLongMonth();
-        }
+    public void setBissextile() {
+        Boolean bissextile;
+        bissextile = (this.getYear() % 4 == 0 && (this.getYear() % 400 == 0 || this.getYear() % 100 != 0));
+        this.bissextile = bissextile;
     }
 
     @Override
     public String toString() {
-        return  this.getDAYS()[this.getDay()] + " " + this.getJour() + " " + this.getMONTHES()[this.getMonth()] + " " +  this.getYear();
+        return  getDAYS()[this.getDay()] + " " + this.getJour() + " " + getMONTHES()[this.getMonth()] + " " +  this.getYear();
+    }
+
+    public boolean greaterThan(Date d1, Date d2){
+        return (d1.getYear() > d2.getYear() || (d1.getYear() == d2.getYear() && d1.getMonth() > d2.getMonth()) ||
+        d1.getYear() == d2.getYear() && d1.getMonth() == d2.getMonth() && d1.getJour() > d2.getJour());
     }
 }
